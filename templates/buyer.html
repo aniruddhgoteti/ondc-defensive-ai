@@ -1,0 +1,76 @@
+#### `templates/result.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+
+        .result-item {
+            margin-bottom: 10px;
+        }
+
+        .result-item strong {
+            display: inline-block;
+            width: 150px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        .links {
+            margin-top: 20px;
+        }
+
+        .links a {
+            text-decoration: none;
+            color: #007BFF;
+            margin: 0 10px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analysis Result</h1>
+        <div class="result-item"><strong>Text:</strong> {{ text }}</div>
+        <div class="result-item"><strong>Issue Detected:</strong> {{ issue_detected }}</div>
+        <div class="result-item"><strong>External Factors:</strong> {{ external_factors }}</div>
+        {% if issue_detected == "Yes" %}
+            <div class="result-item"><strong>Delay Probability:</strong> {{ delay_probability }}</div>
+            <h2>Recommended Suppliers</h2>
+            <ul>
+                {% for supplier in recommended_suppliers %}
+                    <li>{{ supplier['supplier'] }} - {{ supplier['location'] }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <div class="links">
+            <a href="/">Analyze Another</a>
+        </div>
+    </div>
+</body>
+</html>

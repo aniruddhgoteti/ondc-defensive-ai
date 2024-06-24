@@ -1,0 +1,10 @@
+order_id,product_id,supplier,delivery_time,order_quantity,delivery_status,delay_reason,weather_conditions,logistics_issues,inventory_status
+1001,P001,Supplier A,3,50,On Time,,Clear,None,Good
+1002,P002,Supplier A,5,30,Delayed,Weather,Rain,None,Good
+1003,P003,Supplier A,4,20,On Time,,Clear,None,Good
+1004,P001,Supplier B,2,40,On Time,,Clear,None,Good
+1005,P002,Supplier B,3,60,On Time,,Clear,None,Good
+1006,P003,Supplier B,4,35,On Time,,Clear,None,Good
+1007,P001,Supplier C,5,20,Delayed,Logistics,Clear,Truck Breakdown,Good
+1008,P002,Supplier C,6,45,Delayed,Inventory,Clear,None,Low
+1009,P003,Supplier C,7,25,Delayed,Production,Clear,None,Low

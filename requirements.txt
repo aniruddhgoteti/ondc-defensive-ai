@@ -1,0 +1,6 @@
+flask
+tensorflow
+transformers
+pandas
+numpy
+scipy
