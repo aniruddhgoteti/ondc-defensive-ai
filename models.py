@@ -1,6 +1,6 @@
 import tensorflow as tf
 import pandas as pd
-import numpy as np  # Import NumPy
+import numpy as np
 from transformers import BertTokenizer, TFBertForSequenceClassification
 
 def load_data():
@@ -29,7 +29,8 @@ def detect_issues(text):
 
 def recommend_suppliers(current_supplier, suppliers_df):
     try:
-        alternatives = suppliers_df[suppliers_df['supplier'] != current_supplier].sample(3)
+        alternatives = suppliers_df[suppliers_df['supplier'] != current_supplier].sort_values(by='reliability_score', ascending=False).head(3)
+        print(f"Recommended Suppliers: {alternatives}")
         return alternatives.to_dict('records')
     except Exception as e:
         print(f"Error in recommend_suppliers: {e}")
