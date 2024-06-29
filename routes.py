@@ -1,6 +1,6 @@
 from flask import render_template, request, send_file
-from models import detect_issues, recommend_suppliers, generate_probability_graph, load_data
-from utils import interpret_recommendations
+from models import detect_issues, recommend_suppliers, load_data
+from utils import interpret_recommendations, detect_issues_automatically, generate_probability_graph, detect_external_factors
 
 def setup_routes(app):
     suppliers_df, delivery_data_df, sensor_data_df = load_data()
@@ -13,24 +13,23 @@ def setup_routes(app):
     def buyer():
         if request.method == 'POST':
             order_id = request.form['order_id']
-            issue_text = request.form['issue_text']
             supplier_name = request.form['supplier_name']
-            external_factors = request.form['external_factors']
+            threshold = float(request.form['threshold'])
             
-            prediction = detect_issues(issue_text)
-            issue_detected = "Yes" if prediction[0] == 1 else "No"
+            # Automatically detect external factors
+            external_factors = detect_external_factors(sensor_data_df)
             
-            if issue_detected == "Yes":
-                recommended_suppliers = recommend_suppliers(supplier_name, suppliers_df)
-                delivery_times = delivery_data_df[delivery_data_df['supplier'] == supplier_name]['delivery_time']
-                img = generate_probability_graph(delivery_times)
-                interpretation = interpret_recommendations(issue_text, prediction, recommended_suppliers, external_factors)
-                return render_template('buyer_result.html', order_id=order_id, issue_detected=issue_detected, 
-                                       recommended_suppliers=recommended_suppliers, delay_probability=interpretation['delay_probability'],
-                                       external_factors=external_factors, graph_url="/buyer_plot.png", interpretation=interpretation)
-            else:
-                return render_template('buyer_result.html', order_id=order_id, issue_detected=issue_detected, graph_url=None, interpretation=None)
-
+            issue_text = detect_issues_automatically(order_id, supplier_name, external_factors, sensor_data_df)
+            probabilities = detect_issues(issue_text)
+            
+            recommended_suppliers = recommend_suppliers(supplier_name, suppliers_df)
+            delivery_times = delivery_data_df[delivery_data_df['supplier'] == supplier_name]['delivery_time']
+            img = generate_probability_graph(delivery_times)
+            interpretation = interpret_recommendations(issue_text, None, recommended_suppliers, external_factors, probabilities, threshold)
+            
+            return render_template('buyer_result.html', order_id=order_id, interpretation=interpretation, 
+                                   graph_url="/buyer_plot.png")
+            
         return render_template('buyer.html')
 
     @app.route('/buyer_plot.png')

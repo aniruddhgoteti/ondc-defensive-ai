@@ -113,6 +113,106 @@ graph TD;
     end
 ```
 
+## The mathematical behind the model
+
+The core of the ONDC Defensive AI system leverages BERT (Bidirectional Encoder Representations from Transformers) for sequence classification. This implementation specifically uses the TFBertForSequenceClassification model from the Hugging Face Transformers library. The model is fine-tuned to classify supply chain issues based on textual descriptions.
+
+### Mathematical Formulation
+
+**1\. Tokenization:**
+
+The input text is segmented into tokens using the BERT tokenizer:
+
+Python
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   tokens = BertTokenizer(input_text, return_tensors='tf', truncation=True, padding=True, max_length=128)   `
+
+Use code [with caution.](/faq#coding)content\_copy
+
+**2\. Embedding:**
+
+The tokens are processed by the BERT model to generate vector representations (embeddings) that capture semantic meaning:
+
+Python
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   embeddings = BERT(tokens)   `
+
+Use code [with caution.](/faq#coding)content\_copy
+
+**3\. Classification:**
+
+The embeddings are fed into a fully-connected layer (DenseLayer) to compute logits (unnormalized scores) for each class (issue detected or not detected). Finally, a softmax activation function converts these logits into probabilities:
+
+Python
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   logits = DenseLayer(embeddings)  probabilities = softmax(logits)   `
+
+Use code [with caution.](/faq#coding)content\_copy
+
+**Mathematical Notation:**
+
+*   x: Input text sequence
+    
+*   T: BERT tokenizer function
+    
+*   E: BERT model
+    
+*   W: Weight matrix of the DenseLayer
+    
+*   b: Bias vector of the DenseLayer
+    
+*   σ(z): Sigmoid activation function
+    
+
+The logits and probabilities can be expressed as:
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   logits = W * E(T(x)) + b    probabilities = σ(logits)   `
+
+**4\. Prediction:**
+
+The class with the highest probability is chosen as the prediction:
+
+Python
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   predicted_class = argmax(probabilities)   `
+
+Use code [with caution.](/faq#coding)content\_copy
+
+**5\. Probability Threshold Adjustment:**
+
+Buyers can adjust the threshold (τ) for issue detection. Only if the probability of an issue (P(issue)) exceeds the threshold is an issue flagged:
+
+Python
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   issue_detected = {      "Yes" if P(issue) >= τ else "No"  }   `
+
+Use code [with caution.](/faq#coding)content\_copy
+
+**Note:** The specific functions for calculating P(issue) and the threshold adjustment process might vary depending on the implementation.
+
+Additional Considerations
+-------------------------
+
+While the provided code snippet focuses on the BERT-based classification, the text mentions the use of gamma and Poisson distributions. These distributions could be employed for separate tasks like:
+
+*   **Delivery Time Modeling:** The gamma distribution might be used to model the probability density function (PDF) of delivery times, allowing for the calculation of delay probabilities.
+    
+
+**Optional Mathematical Notation:**
+
+*   t: Delivery time
+    
+*   α: Shape parameter of the gamma distribution
+    
+*   β: Scale parameter of the gamma distribution
+    
+
+The PDF of the gamma distribution can be expressed as:
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   f(t; α, β) = (t^(α-1) * exp(-t/β)) / (β^α * Γ(α))   `
+
+where Γ(α) is the gamma function.
+
 ## Installation
 
 ### Prerequisites

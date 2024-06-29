@@ -1,9 +1,7 @@
 import tensorflow as tf
 import pandas as pd
+import numpy as np  # Import NumPy
 from transformers import BertTokenizer, TFBertForSequenceClassification
-import io
-import matplotlib.pyplot as plt
-from scipy.stats import gamma, poisson
 
 def load_data():
     suppliers_df = pd.read_csv('data/suppliers.csv')
@@ -23,7 +21,8 @@ def detect_issues(text):
         inputs = prepare_input(text)
         outputs = model(inputs)
         predictions = tf.nn.softmax(outputs.logits, axis=-1)
-        return np.argmax(predictions, axis=1)
+        probabilities = predictions.numpy().tolist()[0]
+        return probabilities
     except Exception as e:
         print(f"Error in detect_issues: {e}")
         raise
@@ -34,33 +33,4 @@ def recommend_suppliers(current_supplier, suppliers_df):
         return alternatives.to_dict('records')
     except Exception as e:
         print(f"Error in recommend_suppliers: {e}")
-        raise
-
-def predict_delay_probability(delivery_times):
-    try:
-        shape, loc, scale = gamma.fit(delivery_times, floc=0)
-        mean_delivery_time = np.mean(delivery_times)
-        delay_probability = poisson.cdf(mean_delivery_time + 2, mean_delivery_time)
-        return delay_probability, shape, loc, scale
-    except Exception as e:
-        print(f"Error in predict_delay_probability: {e}")
-        raise
-
-def generate_probability_graph(delivery_times):
-    try:
-        delay_probability, shape, loc, scale = predict_delay_probability(delivery_times)
-        img = io.BytesIO()
-        x = np.linspace(0, max(delivery_times) + 10, 100)
-        y = gamma.pdf(x, shape, loc=loc, scale=scale)
-        plt.figure(figsize=(10, 6))
-        plt.plot(x, y, 'b-', lw=2)
-        plt.title('Probability Density Function')
-        plt.xlabel('Delivery Time')
-        plt.ylabel('Probability Density')
-        plt.grid(True)
-        plt.savefig(img, format='png')
-        img.seek(0)
-        return img
-    except Exception as e:
-        print(f"Error in generate_probability_graph: {e}")
         raise
