@@ -18,14 +18,21 @@ def setup_routes(app):
             
             # Automatically detect external factors
             external_factors = detect_external_factors(sensor_data_df)
+            print(f"Detected External Factors: {external_factors}")
             
             issue_text = detect_issues_automatically(order_id, supplier_name, external_factors, sensor_data_df)
+            print(f"Issue Text: {issue_text}")
+            
             probabilities = detect_issues(issue_text)
+            print(f"Probabilities: {probabilities}")
             
             recommended_suppliers = recommend_suppliers(supplier_name, suppliers_df)
+            print(f"Recommended Suppliers: {recommended_suppliers}")
+            
             delivery_times = delivery_data_df[delivery_data_df['supplier'] == supplier_name]['delivery_time']
             img = generate_probability_graph(delivery_times)
             interpretation = interpret_recommendations(issue_text, None, recommended_suppliers, external_factors, probabilities, threshold)
+            print(f"Interpretation: {interpretation}")
             
             return render_template('buyer_result.html', order_id=order_id, interpretation=interpretation, 
                                    graph_url="/buyer_plot.png")

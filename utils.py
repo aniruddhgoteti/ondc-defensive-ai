@@ -63,6 +63,30 @@ def detect_issues_automatically(order_id, supplier_name, external_factors, senso
     issue_description = " ".join(detected_issues) if detected_issues else "No significant issues detected"
     return issue_description
 
+def detect_external_factors(sensor_data_df):
+    """
+    Automatically detect external factors based on sensor data.
+
+    Args:
+        sensor_data_df (DataFrame): DataFrame containing sensor data.
+
+    Returns:
+        list: Detected external factors.
+    """
+    detected_factors = []
+
+    # Example logic: Check sensor data for potential issues
+    if not sensor_data_df[sensor_data_df['sensor_id'] == 1].empty:
+        detected_factors.append("Weather")
+
+    if not sensor_data_df[sensor_data_df['sensor_id'] == 2].empty:
+        detected_factors.append("Geopolitical")
+
+    if not sensor_data_df[sensor_data_df['sensor_id'] == 3].empty:
+        detected_factors.append("Market")
+
+    return detected_factors
+
 def predict_delay_probability(delivery_times):
     """
     Predict delay probability using gamma-Poisson distribution.
@@ -73,6 +97,9 @@ def predict_delay_probability(delivery_times):
     Returns:
         tuple: Delay probability, shape, loc, and scale parameters.
     """
+    if len(delivery_times) == 0:
+        return 0, 0, 0, 0  # Return default values if delivery_times is empty
+
     shape, loc, scale = gamma.fit(delivery_times, floc=0)
     mean_delivery_time = np.mean(delivery_times)
     delay_probability = poisson.cdf(mean_delivery_time + 2, mean_delivery_time)
@@ -89,6 +116,19 @@ def generate_probability_graph(delivery_times):
         BytesIO: Image buffer containing the graph.
     """
     delay_probability, shape, loc, scale = predict_delay_probability(delivery_times)
+
+    if shape == 0 and loc == 0 and scale == 0:
+        # Handle the case where delivery_times is empty and fitting the gamma distribution is not possible
+        img = io.BytesIO()
+        plt.figure(figsize=(10, 6))
+        plt.title('Probability Density Function')
+        plt.xlabel('Delivery Time')
+        plt.ylabel('Probability Density')
+        plt.grid(True)
+        plt.savefig(img, format='png')
+        img.seek(0)
+        return img
+
     img = io.BytesIO()
     x = np.linspace(0, max(delivery_times) + 10, 100)
     y = gamma.pdf(x, shape, loc=loc, scale=scale)

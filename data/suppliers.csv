@@ -1,6 +1,5 @@
-supplier,reliability_score
-ABC Suppliers,0.9
-XYZ Suppliers,0.85
-LMN Suppliers,0.88
-PQR Suppliers,0.87
-TUV Suppliers,0.86
+supplier,name,contact,reliability_score
+ABC Suppliers,ABC Ltd.,123-456-7890,0.55
+XYZ Suppliers,XYZ Ltd.,987-654-3210,0.45
+PQR Suppliers,PQR Ltd.,456-789-1234,0.80
+DEF Suppliers,DEF Ltd.,654-321-9870,0.90

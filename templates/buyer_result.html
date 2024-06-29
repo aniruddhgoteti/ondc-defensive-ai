@@ -1,30 +1,80 @@
 {% extends "base.html" %}
 
-{% block title %}Buyer Result{% endblock %}
+{% block title %}Buyer Results{% endblock %}
 
 {% block content %}
-<div class="buyer-result">
-    <h2>Order Status & Alternatives</h2>
-    <p><strong>Order ID:</strong> {{ order_id }}</p>
-    <p><strong>Issue Detected:</strong> {{ issue_detected }}</p>
-    <p><strong>External Factors:</strong> {{ external_factors }}</p>
-    <p><strong>Delay Probability:</strong> {{ delay_probability }}</p>
-    {% if recommended_suppliers %}
-    <h4>Recommended Suppliers:</h4>
-    <ul>
-        {% for supplier in recommended_suppliers %}
-        <li>{{ supplier.supplier }} - Reliability Score: {{ supplier.reliability_score }}</li>
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% if graph_url %}
-    <h4>Probability Density Function:</h4>
-    <img src="{{ graph_url }}" alt="Probability Density Function" class="img-fluid">
-    {% endif %}
-    {% if interpretation %}
-    <h4>Interpretation:</h4>
-    <p>{{ interpretation }}</p>
-    {% endif %}
-    <a href="/buyer" class="btn btn-primary mt-3">Check Another Order</a>
+<div class="buyer-results">
+    <h2 class="title">Buyer Results</h2>
+    <div class="result-card">
+        <p><strong>Issue Detected:</strong> {{ interpretation.prediction }}</p>
+        <p><strong>Primary External Factor:</strong> {{ interpretation.external_factors[0] }}</p>
+        <p><strong>Delay Probability:</strong> {{ interpretation.delay_probability }}</p>
+        <h3>Recommended Suppliers:</h3>
+        <ul>
+            {% for supplier in interpretation.recommended_suppliers %}
+            <li>{{ supplier.name }} - {{ supplier.contact }} - Reliability Score: {{ supplier.reliability_score }}</li>
+            {% endfor %}
+        </ul>
+        <h3>Probability Density Function:</h3>
+        <img src="{{ graph_url }}" alt="Probability Density Function Graph" class="pdf-graph">
+        <p class="pdf-description">The Probability Density Function (PDF) graph above helps us understand the likelihood of different delivery times for your order. The x-axis represents the delivery time, while the y-axis represents the probability density. The higher the peak of the curve, the more likely it is that your delivery will arrive at that time. This helps us predict potential delays and take proactive measures to ensure timely delivery.</p>
+    </div>
 </div>
+{% endblock %}
+
+{% block styles %}
+<style>
+    .buyer-results {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .title {
+        text-align: center;
+        color: #2c3e50;
+    }
+
+    .result-card {
+        background: #f7f9fb;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .result-card h3 {
+        color: #2980b9;
+    }
+
+    .result-card p {
+        color: #34495e;
+    }
+
+    .result-card ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .result-card ul li {
+        background: #ecf0f1;
+        border-radius: 4px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .pdf-graph {
+        width: 100%;
+        max-width: 600px;
+        display: block;
+        margin: 20px auto;
+    }
+
+    .pdf-description {
+        text-align: center;
+        font-size: 14px;
+        color: #7f8c8d;
+    }
+</style>
 {% endblock %}
