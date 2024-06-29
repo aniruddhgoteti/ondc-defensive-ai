@@ -1,17 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Buyer Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>Order Status</h1>
-        <p><strong>Order ID:</strong> {{ order_id }}</p>
-        <p><strong>Status:</strong> {{ order_status }}</p>
-        <a href="/buyer">Check Another Order</a>
-        <a href="/">Back to Home</a>
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Buyer Result{% endblock %}
+
+{% block content %}
+<div class="buyer-result">
+    <h2>Order Status & Alternatives</h2>
+    <p><strong>Order ID:</strong> {{ order_id }}</p>
+    <p><strong>Issue Detected:</strong> {{ issue_detected }}</p>
+    <p><strong>External Factors:</strong> {{ external_factors }}</p>
+    <p><strong>Delay Probability:</strong> {{ delay_probability }}</p>
+    {% if recommended_suppliers %}
+    <h4>Recommended Suppliers:</h4>
+    <ul>
+        {% for supplier in recommended_suppliers %}
+        <li>{{ supplier.supplier }} - Reliability Score: {{ supplier.reliability_score }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% if graph_url %}
+    <h4>Probability Density Function:</h4>
+    <img src="{{ graph_url }}" alt="Probability Density Function" class="img-fluid">
+    {% endif %}
+    {% if interpretation %}
+    <h4>Interpretation:</h4>
+    <p>{{ interpretation }}</p>
+    {% endif %}
+    <a href="/buyer" class="btn btn-primary mt-3">Check Another Order</a>
+</div>
+{% endblock %}

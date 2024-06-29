@@ -1,63 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Seller Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+{% extends "base.html" %}
 
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 400px;
-        }
+{% block title %}Seller Result{% endblock %}
 
-        .result-item {
-            margin-bottom: 10px;
-        }
-
-        .result-item strong {
-            display: inline-block;
-            width: 150px;
-            text-align: right;
-            margin-right: 10px;
-        }
-
-        .links {
-            margin-top: 20px;
-        }
-
-        .links a {
-            text-decoration: none;
-            color: #007BFF;
-            margin: 0 10px;
-        }
-
-        .links a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Seller Result</h1>
-        <div class="result-item"><strong>Status:</strong> {{ inventory_status }}</div>
-        <div class="links">
-            <a href="/seller">Update Inventory Again</a>
-            <a href="/">Back to Home</a>
-        </div>
-    </div>
-</body>
-</html>
+{% block content %}
+<div class="seller-result">
+    <h2>Inventory Update Result</h2>
+    <p>{{ inventory_status }}</p>
+    <a href="/seller" class="btn btn-primary mt-3">Update Another Product</a>
+</div>
+{% endblock %}

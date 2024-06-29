@@ -1,6 +1,8 @@
-flask
 tensorflow
 transformers
 pandas
+flask
 numpy
 scipy
+matplotlib
+tf-keras

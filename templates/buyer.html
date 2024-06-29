@@ -1,76 +1,33 @@
-#### `templates/result.html`
+{% extends "base.html" %}
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+{% block title %}Buyer Interface{% endblock %}
 
-        .container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 400px;
-        }
-
-        .result-item {
-            margin-bottom: 10px;
-        }
-
-        .result-item strong {
-            display: inline-block;
-            width: 150px;
-            text-align: right;
-            margin-right: 10px;
-        }
-
-        .links {
-            margin-top: 20px;
-        }
-
-        .links a {
-            text-decoration: none;
-            color: #007BFF;
-            margin: 0 10px;
-        }
-
-        .links a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>Analysis Result</h1>
-        <div class="result-item"><strong>Text:</strong> {{ text }}</div>
-        <div class="result-item"><strong>Issue Detected:</strong> {{ issue_detected }}</div>
-        <div class="result-item"><strong>External Factors:</strong> {{ external_factors }}</div>
-        {% if issue_detected == "Yes" %}
-            <div class="result-item"><strong>Delay Probability:</strong> {{ delay_probability }}</div>
-            <h2>Recommended Suppliers</h2>
-            <ul>
-                {% for supplier in recommended_suppliers %}
-                    <li>{{ supplier['supplier'] }} - {{ supplier['location'] }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        <div class="links">
-            <a href="/">Analyze Another</a>
+{% block content %}
+<div class="buyer-interface">
+    <h2>Buyer Interface</h2>
+    <form method="post" action="/buyer">
+        <div class="form-group">
+            <label for="order_id">Order ID</label>
+            <input type="text" class="form-control" id="order_id" name="order_id" required>
         </div>
-    </div>
-</body>
-</html>
+        <div class="form-group">
+            <label for="issue_text">Supply Chain Issue Description</label>
+            <textarea class="form-control" id="issue_text" name="issue_text" rows="3" required placeholder="Describe any issues with your order..."></textarea>
+        </div>
+        <div class="form-group">
+            <label for="supplier_name">Current Supplier</label>
+            <input type="text" class="form-control" id="supplier_name" name="supplier_name" required>
+        </div>
+        <div class="form-group">
+            <label for="external_factors">External Factors</label>
+            <select class="form-control" id="external_factors" name="external_factors" required>
+                <option value="" disabled selected>Select an External Factor</option>
+                <option value="weather">Weather</option>
+                <option value="geopolitical">Geopolitical</option>
+                <option value="market">Market Trends</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Check Status & Alternatives</button>
+    </form>
+</div>
+{% endblock %}

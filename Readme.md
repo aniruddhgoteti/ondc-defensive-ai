@@ -1,106 +1,131 @@
 # ONDC Defensive AI
 
-This is a Flask-based application designed to provide early warnings for potential supply chain issues and recommend alternative suppliers. The application leverages a fine-tuned BERT model for text classification to detect issues and uses statistical methods to predict the probability of delays.
+## Overview
 
-## Features
+ONDC Defensive AI is a cutting-edge supply chain early warning system designed to enhance the resilience of Micro, Small, and Medium Enterprises (MSMEs) on the Open Network for Digital Commerce (ONDC). This platform leverages AI-driven analytics to detect disruptions, recommend alternative suppliers, and provide actionable insights to ensure smooth operations thereby making smart decision making affordable and accessible.
 
-- **Issue Detection**: Uses a BERT model to classify textual descriptions of supply chain events and detect potential issues.
-- **Delay Prediction**: Calculates the probability of delays based on historical delivery data using a gamma-Poisson distribution.
-- **Alternative Supplier Recommendation**: Recommends alternative suppliers if an issue is detected.
-- **Buyer Interface**: Allows buyers to check the status of their orders.
-- **Seller Interface**: Allows sellers to update their inventory.
+## Problem Statement
 
-## Algorithmic Logic
+MSMEs are the backbone of India's economy, contributing significantly to GDP and employment. However, they face numerous challenges in maintaining supply chain resilience, particularly in the context of the evolving digital commerce landscape. The ONDC initiative aims to democratize digital commerce by creating an open, inclusive, and competitive network. Despite this, MSMEs still struggle with:
 
-### 1. Issue Detection with BERT
+- **Supply Chain Disruptions**: Unforeseen events like weather changes, geopolitical tensions, and market fluctuations can severely impact supply chains.
+- **Lack of Predictive Insights**: Traditional supply chain management lacks the predictive capabilities needed to anticipate and mitigate disruptions.
+- **Limited Access to Alternatives**: MSMEs often have limited visibility into alternative suppliers and logistical solutions.
 
-- **Input**: Text description of a supply chain event.
-- **Process**: Tokenize the input text using BERT tokenizer and classify it using a fine-tuned BERT model.
-- **Output**: Predicted class (0 for no issue, 1 for issue).
+## Solution: ONDC Defensive AI
 
-### 2. Delay Probability Prediction
+Our platform addresses these challenges by providing a robust AI-driven early warning system. Key features include:
 
-- **Input**: Historical delivery times for a supplier.
-- **Process**:
-  1. Fit a gamma distribution to the delivery times.
-  2. Calculate the mean delivery time.
-  3. Use a Poisson distribution to predict the delay probability.
-- **Output**: Probability of a delay.
+- **Real-Time Monitoring**: Continuous monitoring of supply chain parameters using mock sensors and data platforms.
+- **Predictive Analytics**: Using advanced models to predict the probability of disruptions and their potential impact.
+- **Alternative Recommendations**: Suggesting reliable alternative suppliers with projected lead times.
+- **Transparent Decision-Making**: Offering interpretable insights and visualizations to enhance trust and decision-making.
 
-### 3. Alternative Supplier Recommendation
+## Market Opportunity
 
-- **Input**: Current supplier name.
-- **Process**: Exclude the current supplier from the list and randomly select alternative suppliers.
-- **Output**: List of alternative suppliers.
+The ONDC initiative is poised to revolutionize digital commerce in India, targeting a significant market segment:
 
-### 4. External Factor Simulation
+1. **Total Addressable Market (TAM)**: The Indian retail market was valued at $950 billion in 2023, with e-commerce accounting for 10% of this market. The fashion sector alone is projected to grow to $200 billion by 2030, with online fashion contributing $36 billion. (Source: Indian Retailer, 2024)
+2. **Serviceable Addressable Market (SAM)**: ONDC aims to onboard 900 million buyers and 1.2 million suppliers over the next five years, facilitating a paradigm shift in e-commerce penetration from 8% to 25%. (Sources: Indian Retailer, 2024)
 
-- **Input**: External factors such as weather conditions, logistics issues, or inventory status.
-- **Process**: Adjust delay probability and recommendations based on the selected external factor.
-- **Output**: Adjusted delay probability and recommendations.
+# ONDC Defensive AI System Design
 
-## System Design
+## Overview
 
-The system is designed with the following components:
+ONDC Defensive AI is a supply chain early warning system designed to enhance the resilience of MSMEs on the Open Network for Digital Commerce (ONDC). The system leverages AI-driven analytics to detect disruptions, recommend alternative suppliers, and provide actionable insights.
 
-1. **Web Interface**: Built with Flask, providing forms for users to input data and view results.
-2. **Machine Learning Model**: A fine-tuned BERT model for text classification.
-3. **Statistical Analysis**: Using gamma and Poisson distributions to predict delays.
-4. **Database**: CSV files to simulate supplier and delivery data.
-5. **Recommendation Engine**: Logic to recommend alternative suppliers based on current supplier performance and external factors.
+## System Architecture
 
+The system is divided into several components, each responsible for different aspects of functionality. Here's a detailed breakdown:
 
-### Diagrammatic System Design
+### Components
+
+1. **Frontend (User Interface)**
+    - **Buyer Interface**: Allows buyers to input order details, describe supply chain issues, and receive status updates and alternative supplier recommendations.
+    - **Seller Interface**: Enables sellers to update inventory levels and manage product availability.
+
+2. **Backend (Server)**
+    - **Flask Application**: Manages HTTP requests, routing, and rendering of templates.
+    - **Models**: Handles AI model loading, prediction, and recommendation logic.
+    - **Utilities**: Contains utility functions for data processing, visualization, and interpretation of AI model outputs.
+
+3. **Data Sources**
+    - **Mock Sensors**: Simulated sensors provide real-time data on supply chain conditions (e.g., weather, geopolitical events).
+    - **Data Platforms**: Pre-collected data on suppliers, delivery times, and other relevant metrics.
+
+### Data Flow
+
+1. **User Input**: Buyers input order details and supply chain issues via the buyer interface.
+2. **Data Processing**: The input data is processed and prepared for AI model analysis.
+3. **AI Analysis**: The AI model analyzes the data to detect potential issues and predict disruption probabilities.
+4. **Recommendation Engine**: Based on the AI analysis, the system recommends alternative suppliers with projected lead times.
+5. **Visualization**: The system generates probability density graphs and interpretable insights to present to the user.
+6. **Output**: The results, including recommendations and visualizations, are displayed to the user.
+
+### Detailed Component Design
+
+#### 1. Frontend
+
+- **HTML Templates**: Use Jinja2 templates for rendering dynamic content.
+- **CSS and JavaScript**: Provide styling and interactivity.
+
+#### 2. Backend
+
+- **Flask Routes**: Define routes for handling buyer and seller requests.
+- **AI Models**: Utilize pre-trained BERT models for issue detection and recommendation.
+- **Utility Functions**: Include functions for data preparation, prediction, visualization, and interpretation.
+
+#### 3. Data Sources
+
+- **Mock Sensor Data**: Simulated real-time data for various external factors affecting the supply chain.
+- **Supplier and Delivery Data**: Historical data on supplier reliability and delivery times.
+
+### Visualization and Interpretation
+
+- **Probability Density Graphs**: Visualize the likelihood of supply chain disruptions.
+- **Supplier Reliability Scores**: Assess and compare the reliability of alternative suppliers.
+- **Interpretation Reports**: Provide detailed insights into the AI model's decision-making process.
 
 ```mermaid
-graph TD
-    A[User Input] --> B{Issue Detection}
-    B -->|No Issue| C[No Action Needed]
-    B -->|Issue Detected| D{Predict Delay Probability}
-    D -->|High Probability| E[Recommend Alternative Suppliers]
-    D -->|Low Probability| F[Monitor Situation]
-    E --> G[Provide Recommendations to User]
-    F --> G
+graph TD;
+    A[User Input] -->|Order Details| B[Data Processing];
+    B -->|Prepared Data| C[AI Analysis];
+    C -->|Predicted Issues| D[Recommendation Engine];
+    D -->|Supplier Recommendations| E[Visualization];
+    E -->|Visual Insights| F[Output to User];
+    F -->|Decision Making| G[Buyer Interface];
+    F -->|Inventory Update| H[Seller Interface];
+    subgraph Frontend
+        G;
+        H;
+    end
+    subgraph Backend
+        B;
+        C;
+        D;
+        E;
+    end
+    subgraph Data Sources
+        I[Mock Sensors];
+        J[Data Platforms];
+        I --> B;
+        J --> B;
+    end
 ```
 
 ## Installation
 
-1. **Clone the repository**:
-    ```bash
-    git clone https://github.com/yourusername/supply-chain-alert-system.git
-    cd supply-chain-alert-system
-    ```
+### Prerequisites
 
-2. **Create and activate a virtual environment**:
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-    ```
+- Python 3.x
+- Docker (optional for containerized deployment)
 
-3. **Install the dependencies**:
-    ```bash
-    pip install -r requirements.txt
-    ```
+### Setup
 
-4. **Run the application**:
-    ```bash
-    python app.py
-    ```
-
-## Usage
-
-1. **Home Page**:
-    - Enter the text description of a supply chain issue.
-    - Enter the current supplier's name.
-    - Select an external factor that might impact the supply chain (e.g., weather, logistics issues).
-    - Click on "Analyze" to get the analysis results.
-
-2. **Buyer Interface**:
-    - Enter the Order ID to check the status of an order.
-    - Click on "Check Order Status" to see the result.
-
-3. **Seller Interface**:
-    - Click on "Update Inventory" to simulate updating inventory.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/ondc-defensive-ai.git
+   cd ondc-defensive-ai
 
 ## Data Files
 
@@ -120,7 +145,3 @@ To run the application using Docker:
     ```bash
     docker run -p 4000:80 supply-chain-alert
     ```
-
-## License
-
-This project is licensed under the MIT License.
